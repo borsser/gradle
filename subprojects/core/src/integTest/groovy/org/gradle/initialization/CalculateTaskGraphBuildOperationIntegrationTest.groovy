@@ -33,9 +33,9 @@ class CalculateTaskGraphBuildOperationIntegrationTest extends AbstractIntegratio
     @ToBeFixedForInstantExecution
     def "requested and filtered tasks are exposed"() {
         settingsFile << """
-        include "a"
-        include "b"
-        include "a:c"
+            include "a"
+            include "b"
+            include "a:c"
         """
 
         buildFile << """
@@ -83,9 +83,9 @@ class CalculateTaskGraphBuildOperationIntegrationTest extends AbstractIntegratio
 
     def "task plan is exposed"() {
         settingsFile << """
-        include "a"
-        include "b"
-        include "a:c"
+            include "a"
+            include "b"
+            include "a:c"
         """
 
         buildFile << """
@@ -153,40 +153,40 @@ class CalculateTaskGraphBuildOperationIntegrationTest extends AbstractIntegratio
         file("included-build").mkdir()
         file("included-build/settings.gradle")
         file("included-build/build.gradle") << """
-        apply plugin:'java-library'
-        group = 'org.acme'
-        version = '1.0'
+            apply plugin:'java-library'
+            group = 'org.acme'
+            version = '1.0'
         """
 
         file('src/main/java/org/acme/Library.java') << """
-        package org.acme;
+            package org.acme;
 
-        class Library {
-        }
+            class Library {
+            }
         """
         settingsFile << """
             includeBuild 'included-build'
         """
 
         buildFile << """
-                apply plugin:'java-library'
+            apply plugin:'java-library'
 
-                dependencies {
-                    implementation 'org.acme:included-build:1.0'
-                }
-                task independentTask
-                task otherTask
-                task anotherTask
-                task firstTask
-                task secondTask
-                task lastTask
-                task someTask
+            dependencies {
+                implementation 'org.acme:included-build:1.0'
+            }
+            task independentTask
+            task otherTask
+            task anotherTask
+            task firstTask
+            task secondTask
+            task lastTask
+            task someTask
 
-                someTask.dependsOn anotherTask
-                someTask.dependsOn otherTask
-                someTask.mustRunAfter firstTask
-                someTask.shouldRunAfter secondTask
-                someTask.finalizedBy lastTask
+            someTask.dependsOn anotherTask
+            someTask.dependsOn otherTask
+            someTask.mustRunAfter firstTask
+            someTask.shouldRunAfter secondTask
+            someTask.finalizedBy lastTask
         """
         when:
         succeeds('classes', 'independentTask', 'someTask')
